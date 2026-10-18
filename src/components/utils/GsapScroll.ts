@@ -99,6 +99,11 @@ export function setCharTimeline(
       if (neckBone) {
         tl2.to(neckBone.rotation, { x: 0.6, delay: 2, duration: 3 }, 0);
       }
+      const initialMonitorY = monitor ? monitor.position.y : 9.04;
+      const initialMonitorZ = monitor ? monitor.position.z : 5.12;
+      const initialScreenY = screenLight ? screenLight.position.y : 9.04;
+      const initialScreenZ = screenLight ? screenLight.position.z : 5.12;
+
       if (monitor) {
         if (Array.isArray(monitor.material)) {
           monitor.material.forEach((mat: any) => {
@@ -109,13 +114,21 @@ export function setCharTimeline(
         }
         tl2.fromTo(
           monitor.position,
-          { y: -10, z: 2 },
-          { y: 0, z: 0, delay: 1.5, duration: 3 },
+          { y: initialMonitorY - 8, z: initialMonitorZ + 1 },
+          { y: initialMonitorY, z: initialMonitorZ, delay: 1.5, duration: 3 },
           0
         );
       }
-      if (screenLight && screenLight.material) {
-        tl2.to(screenLight.material, { opacity: 1, duration: 0.8, delay: 4.5 }, 0);
+      if (screenLight) {
+        if (screenLight.material) {
+          tl2.to(screenLight.material, { opacity: 1, duration: 0.8, delay: 4.5 }, 0);
+        }
+        tl2.fromTo(
+          screenLight.position,
+          { y: initialScreenY - 8, z: initialScreenZ + 1 },
+          { y: initialScreenY, z: initialScreenZ, delay: 1.5, duration: 3 },
+          0
+        );
       }
 
       tl2
@@ -152,6 +165,18 @@ export function setCharTimeline(
         },
       });
       tM2.to(".what-box-in", { display: "flex", duration: 0.1, delay: 0 }, 0);
+      if (monitor) {
+        if (Array.isArray(monitor.material)) {
+          monitor.material.forEach((mat: any) => {
+            tM2.to(mat, { opacity: 1, duration: 0.5 }, 0);
+          });
+        } else if (monitor.material) {
+          tM2.to(monitor.material, { opacity: 1, duration: 0.5 }, 0);
+        }
+      }
+      if (screenLight && screenLight.material) {
+        tM2.to(screenLight.material, { opacity: 1, duration: 0.5 }, 0);
+      }
     }
   }
 }
