@@ -36,31 +36,40 @@ export function setCharTimeline(
       invalidateOnRefresh: true,
     },
   });
-  let screenLight: any, monitor: any;
-  character?.children.forEach((object: any) => {
-    if (object.name === "Plane004") {
-      object.children.forEach((child: any) => {
-        child.material.transparent = true;
-        child.material.opacity = 0;
-        if (child.material.name === "Material.018") {
-          monitor = child;
-          child.material.color.set("#FFFFFF");
-        }
-      });
+  let screenLight: any = null;
+  let monitor: any = null;
+  character?.traverse((object: any) => {
+    if (object.name === "Plane.004" || object.name === "Plane004") {
+      monitor = object;
+      if (Array.isArray(object.material)) {
+        object.material.forEach((mat: any) => {
+          mat.transparent = true;
+          mat.opacity = 0;
+        });
+      } else if (object.material) {
+        object.material.transparent = true;
+        object.material.opacity = 0;
+      }
     }
     if (object.name === "screenlight") {
-      object.material.transparent = true;
-      object.material.opacity = 0;
-      object.material.emissive.set("#B0F5EA");
-      gsap.timeline({ repeat: -1, repeatRefresh: true }).to(object.material, {
-        emissiveIntensity: () => intensity * 8,
-        duration: () => Math.random() * 0.6,
-        delay: () => Math.random() * 0.1,
-      });
       screenLight = object;
+      if (object.material) {
+        object.material.transparent = true;
+        object.material.opacity = 0;
+        if (object.material.emissive) {
+          object.material.emissive.set("#5eead4");
+          gsap.timeline({ repeat: -1, repeatRefresh: true }).to(object.material, {
+            emissiveIntensity: () => intensity * 8,
+            duration: () => Math.random() * 0.6,
+            delay: () => Math.random() * 0.1,
+          });
+        }
+      }
     }
   });
-  let neckBone = character?.getObjectByName("spine005");
+  let neckBone =
+    character?.getObjectByName("spine.005") ||
+    character?.getObjectByName("spine005");
   if (window.innerWidth > 1024) {
     if (character) {
       tl1
@@ -85,20 +94,35 @@ export function setCharTimeline(
           { pointerEvents: "none", x: "-12%", delay: 2, duration: 5 },
           0
         )
-        .to(character.rotation, { y: 0.92, x: 0.12, delay: 3, duration: 3 }, 0)
-        .to(neckBone!.rotation, { x: 0.6, delay: 2, duration: 3 }, 0)
-        .to(monitor.material, { opacity: 1, duration: 0.8, delay: 3.2 }, 0)
-        .to(screenLight.material, { opacity: 1, duration: 0.8, delay: 4.5 }, 0)
+        .to(character.rotation, { y: 0.92, x: 0.12, delay: 3, duration: 3 }, 0);
+
+      if (neckBone) {
+        tl2.to(neckBone.rotation, { x: 0.6, delay: 2, duration: 3 }, 0);
+      }
+      if (monitor) {
+        if (Array.isArray(monitor.material)) {
+          monitor.material.forEach((mat: any) => {
+            tl2.to(mat, { opacity: 1, duration: 0.8, delay: 3.2 }, 0);
+          });
+        } else if (monitor.material) {
+          tl2.to(monitor.material, { opacity: 1, duration: 0.8, delay: 3.2 }, 0);
+        }
+        tl2.fromTo(
+          monitor.position,
+          { y: -10, z: 2 },
+          { y: 0, z: 0, delay: 1.5, duration: 3 },
+          0
+        );
+      }
+      if (screenLight && screenLight.material) {
+        tl2.to(screenLight.material, { opacity: 1, duration: 0.8, delay: 4.5 }, 0);
+      }
+
+      tl2
         .fromTo(
           ".what-box-in",
           { display: "none" },
           { display: "flex", duration: 0.1, delay: 6 },
-          0
-        )
-        .fromTo(
-          monitor.position,
-          { y: -10, z: 2 },
-          { y: 0, z: 0, delay: 1.5, duration: 3 },
           0
         )
         .fromTo(

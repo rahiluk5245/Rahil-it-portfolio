@@ -100,13 +100,19 @@ const createBoneAction = (
   return mixer.clipAction(filteredClip);
 };
 
+const normalize = (name: string) => name.replace(/[\._]/g, "").toLowerCase();
+
 const filterAnimationTracks = (
   clip: THREE.AnimationClip,
   boneNames: string[]
 ): THREE.AnimationClip => {
-  const filteredTracks = clip.tracks.filter((track) =>
-    boneNames.some((boneName) => track.name.includes(boneName))
-  );
+  const normalizedBoneNames = boneNames.map(normalize);
+  const filteredTracks = clip.tracks.filter((track) => {
+    const normTrackName = normalize(track.name);
+    return normalizedBoneNames.some((boneName) =>
+      normTrackName.includes(boneName)
+    );
+  });
 
   return new THREE.AnimationClip(
     clip.name + "_filtered",
