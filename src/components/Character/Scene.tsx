@@ -53,38 +53,52 @@ const Scene = () => {
       let progress = setProgress((value) => setLoading(value));
       const { loadCharacter } = setCharacter(renderer, scene, camera);
 
-      loadCharacter().then((gltf) => {
-        if (gltf) {
-          const animations = setAnimations(gltf);
-          hoverDivRef.current && animations.hover(gltf, hoverDivRef.current);
-          mixer = animations.mixer;
-          let character = gltf.scene;
-          setChar(character);
-          scene.add(character);
-          headBone =
-            character.getObjectByName("spine.006") ||
-            character.getObjectByName("spine006") ||
-            null;
-          screenLight = character.getObjectByName("screenlight") || null;
+      let isProgressLoaded = false;
+      const safeLoadProgress = (onComplete?: () => void) => {
+        if (!isProgressLoaded) {
+          isProgressLoaded = true;
           progress.loaded().then(() => {
             setTimeout(() => {
               light.turnOnLights();
-              animations.startIntro();
+              if (onComplete) onComplete();
             }, 2500);
           });
-          window.addEventListener("resize", () =>
-            handleResize(renderer, camera, canvasDiv, character)
-          );
         }
-      }).catch((err) => {
-        console.error("Character failed to load:", err);
-        // Bypass the loading screen gracefully
-        progress.loaded().then(() => {
-          setTimeout(() => {
-            light.turnOnLights();
-          }, 2500);
+      };
+
+      const fallbackTimer = setTimeout(() => {
+        console.warn("Triggering fallback progress completion");
+        safeLoadProgress();
+      }, 5000);
+
+      loadCharacter()
+        .then((gltf) => {
+          clearTimeout(fallbackTimer);
+          if (gltf) {
+            const animations = setAnimations(gltf);
+            hoverDivRef.current && animations.hover(gltf, hoverDivRef.current);
+            mixer = animations.mixer;
+            let character = gltf.scene;
+            setChar(character);
+            scene.add(character);
+            headBone =
+              character.getObjectByName("spine.006") ||
+              character.getObjectByName("spine006") ||
+              null;
+            screenLight = character.getObjectByName("screenlight") || null;
+            safeLoadProgress(() => {
+              animations.startIntro();
+            });
+            window.addEventListener("resize", () =>
+              handleResize(renderer, camera, canvasDiv, character)
+            );
+          }
+        })
+        .catch((err) => {
+          clearTimeout(fallbackTimer);
+          console.error("Character failed to load:", err);
+          safeLoadProgress();
         });
-      });
 
       let mouse = { x: 0, y: 0 },
         interpolation = { x: 0.1, y: 0.2 };
@@ -138,6 +152,7 @@ const Scene = () => {
       };
       animate();
       return () => {
+        clearTimeout(fallbackTimer);
         clearTimeout(debounce);
         scene.clear();
         renderer.dispose();
