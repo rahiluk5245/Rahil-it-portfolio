@@ -85,7 +85,10 @@ const Scene = () => {
               character.getObjectByName("spine.006") ||
               character.getObjectByName("spine006") ||
               null;
-            screenLight = character.getObjectByName("screenlight") || null;
+            screenLight =
+              character.getObjectByName("screenlight") ||
+              character.getObjectByName("Glass.001") ||
+              null;
             safeLoadProgress(() => {
               animations.startIntro();
             });
