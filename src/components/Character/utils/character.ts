@@ -375,18 +375,10 @@ const setCharacter = (
 
   const loadCharacter = async (): Promise<GLTF | null> => {
     // Attempt 1: Standard unencrypted direct GLB load (instant on localhost and production)
-    const directPaths = [
-      "/models/character.glb",
-      "/models/new_character.glb",
-      "/models/new character.glb",
-    ];
-
-    for (const path of directPaths) {
-      try {
-        return await loadModelFromUrl(path);
-      } catch (err) {
-        console.warn(`Direct load from ${path} failed, trying next option...`);
-      }
+    try {
+      return await loadModelFromUrl("/models/character.glb");
+    } catch (err) {
+      console.warn("Direct load from /models/character.glb failed, trying encrypted model:", err);
     }
 
     // Attempt 2: Decrypt .enc file as fallback
