@@ -176,7 +176,13 @@ const setCharacter = (
   const loadCharacter = async (): Promise<GLTF | null> => {
     // Attempt 1: Standard unencrypted direct GLB load (instant on localhost and production)
     try {
-      return await loadModelFromUrl("/models/character.glb");
+      return await loadModelFromUrl("/models/character-v2.glb?v=2");
+    } catch (err) {
+      console.warn("Direct load from /models/character-v2.glb failed, trying character.glb:", err);
+    }
+
+    try {
+      return await loadModelFromUrl("/models/character.glb?v=2");
     } catch (err) {
       console.warn("Direct load from /models/character.glb failed, trying encrypted fallback:", err);
     }
