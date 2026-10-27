@@ -12,70 +12,70 @@ const projects = [
     category: "Technical Support",
     tools:
       "Level 1 & Level 2 Support, Desktop Support, End-User Support, Incident Management, Ticket Resolution, SLA Compliance, Remote Support",
-    image: "/images/help desk support.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (8)1.jpg",
   },
   {
     title: "Microsoft Technologies",
     category: "Systems & Infrastructure",
     tools:
       "Windows 10/11, Microsoft 365, Outlook, Active Directory, Group Policy (Basic), Azure AD (Basic), Microsoft Office Suite",
-    image: "/images/windows and linux.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (1).jpg",
   },
   {
     title: "ERP Systems",
     category: "Business Applications",
     tools:
       "Microsoft Dynamics NAV, Microsoft Dynamics 365 Business Central (BC365), LS Retail, Odoo, Tally ERP, QuickBooks",
-    image: "/images/bussiness central.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (2).jpg",
   },
   {
     title: "Hardware & Software",
     category: "Hardware & Software Support",
     tools:
       "PC/Laptop Installation, Hardware Troubleshooting, Software Installation, Driver Installation, Printer & Scanner Support, POS Terminal Support",
-    image: "/images/hardware and software.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (3).jpg",
   },
   {
     title: "Networking",
     category: "Infrastructure & Networking",
     tools:
       "TCP/IP, DNS, DHCP, VPN, LAN/WAN, Wi-Fi Troubleshooting, Network Connectivity, Router & Switch Basics",
-    image: "/images/networking.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (4).jpg",
   },
   {
     title: "Database & Reporting",
     category: "Data & Reporting",
     tools:
       "SQL Server, Database Management, Data Validation, MIS Reporting, Advanced Microsoft Excel (Pivot Tables, VLOOKUP, XLOOKUP, Power Query)",
-    image: "/images/it troubleshooting.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (5).jpg",
   },
   {
     title: "Retail & POS Operations",
     category: "Retail Operations",
     tools:
       "POS Configuration, Item Master Management, Pricing & Promotions, Inventory Control, Sales Reconciliation, Stock Adjustments",
-    image: "/images/system installtion.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (6).jpg",
   },
   {
     title: "ERP Functional Support",
     category: "ERP Functional Support",
     tools:
       "Sales, Purchase, Inventory, Finance, Warehouse Management, User Training, ERP Configuration",
-    image: "/images/dynamics nav.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz.jpg",
   },
   {
     title: "System Administration",
     category: "System Administration",
     tools:
       "User Account Management, System Configuration, Patch Management, Backup & Recovery, Performance Monitoring",
-    image: "/images/system admin.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (7).jpg",
   },
   {
     title: "Professional Skills",
     category: "Professional Skills",
     tools:
       "Problem Solving, Communication, Documentation, Vendor Coordination, Team Collaboration, Process Improvement, Customer Service",
-    image: "/images/user management.png",
+    image: "/images/Gemini_Generated_Image_j2izfbj2izfbj2iz (9).jpg",
   },
 ];
 
