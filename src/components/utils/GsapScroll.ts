@@ -10,7 +10,9 @@ export function setCharTimeline(
     intensity = Math.random();
   }, 200);
   const tl1 = gsap.timeline({
+    id: "char-tl1",
     scrollTrigger: {
+      id: "char-trigger1",
       trigger: ".landing-section",
       start: "top top",
       end: "bottom top",
@@ -19,7 +21,9 @@ export function setCharTimeline(
     },
   });
   const tl2 = gsap.timeline({
+    id: "char-tl2",
     scrollTrigger: {
+      id: "char-trigger2",
       trigger: ".about-section",
       start: "center 55%",
       end: "bottom top",
@@ -28,7 +32,9 @@ export function setCharTimeline(
     },
   });
   const tl3 = gsap.timeline({
+    id: "char-tl3",
     scrollTrigger: {
+      id: "char-trigger3",
       trigger: ".whatIDO",
       start: "top top",
       end: "bottom top",
@@ -86,8 +92,6 @@ export function setCharTimeline(
           { z: 75, y: 8.4, duration: 6, delay: 2, ease: "power3.inOut" },
           0
         )
-        .to(".about-section", { y: "30%", duration: 6 }, 0)
-        .to(".about-section", { opacity: 0, delay: 3, duration: 2 }, 0)
         .fromTo(
           ".character-model",
           { pointerEvents: "inherit" },
@@ -131,19 +135,12 @@ export function setCharTimeline(
         );
       }
 
-      tl2
-        .fromTo(
-          ".what-box-in",
-          { display: "none" },
-          { display: "flex", duration: 0.1, delay: 6 },
-          0
-        )
-        .fromTo(
-          ".character-rim",
-          { opacity: 1, scaleX: 1.4 },
-          { opacity: 0, scale: 0, y: "-70%", duration: 5, delay: 2 },
-          0.3
-        );
+      tl2.fromTo(
+        ".character-rim",
+        { opacity: 1, scaleX: 1.4 },
+        { opacity: 0, scale: 0, y: "-70%", duration: 5, delay: 2 },
+        0.3
+      );
 
       tl3
         .fromTo(
@@ -157,25 +154,17 @@ export function setCharTimeline(
     }
   } else {
     if (character) {
-      const tM2 = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".what-box-in",
-          start: "top 70%",
-          end: "bottom top",
-        },
-      });
-      tM2.to(".what-box-in", { display: "flex", duration: 0.1, delay: 0 }, 0);
       if (monitor) {
         if (Array.isArray(monitor.material)) {
           monitor.material.forEach((mat: any) => {
-            tM2.to(mat, { opacity: 1, duration: 0.5 }, 0);
+            mat.opacity = 1;
           });
         } else if (monitor.material) {
-          tM2.to(monitor.material, { opacity: 1, duration: 0.5 }, 0);
+          monitor.material.opacity = 1;
         }
       }
       if (screenLight && screenLight.material) {
-        tM2.to(screenLight.material, { opacity: 1, duration: 0.5 }, 0);
+        screenLight.material.opacity = 1;
       }
     }
   }

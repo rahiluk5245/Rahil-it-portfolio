@@ -3,6 +3,8 @@
 }
 .title,
 .para {
+  opacity: 1;
+  visibility: visible;
   font-kerning: none;
   -webkit-text-rendering: optimizeSpeed;
   text-rendering: optimizeSpeed;

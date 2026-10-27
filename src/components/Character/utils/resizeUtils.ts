@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { setCharTimeline, setAllTimeline } from "../../utils/GsapScroll";
+import { setCharTimeline } from "../../utils/GsapScroll";
 
 export default function handleResize(
   renderer: THREE.WebGLRenderer,
@@ -29,11 +29,11 @@ export default function handleResize(
   }
   camera.updateProjectionMatrix();
 
-  const workTrigger = ScrollTrigger.getById("work");
-  ScrollTrigger.getAll().forEach((trigger) => {
-    if (trigger !== workTrigger) trigger.kill();
+  ["char-trigger1", "char-trigger2", "char-trigger3"].forEach((id) => {
+    const trigger = ScrollTrigger.getById(id);
+    if (trigger) trigger.kill();
   });
 
   setCharTimeline(character, camera);
-  setAllTimeline();
+  ScrollTrigger.refresh();
 }
