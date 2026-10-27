@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import setCharacter from "./utils/character";
 import setLighting from "./utils/lighting";
@@ -19,7 +19,6 @@ const Scene = () => {
   const sceneRef = useRef(new THREE.Scene());
   const { setLoading } = useLoading();
 
-  const [character, setChar] = useState<THREE.Object3D | null>(null);
   useEffect(() => {
     if (canvasDiv.current) {
       let rect = canvasDiv.current.getBoundingClientRect();
@@ -37,9 +36,19 @@ const Scene = () => {
       renderer.toneMappingExposure = 1;
       canvasDiv.current.appendChild(renderer.domElement);
 
-      const camera = new THREE.PerspectiveCamera(14.5, aspect, 0.1, 1000);
+      const isMobile = aspect < 1;
+      const camera = new THREE.PerspectiveCamera(
+        isMobile ? 18 : 14.5,
+        aspect,
+        0.1,
+        1000
+      );
       camera.position.z = 10;
-      camera.position.set(0, 13.1, 24.7);
+      if (isMobile) {
+        camera.position.set(0, 13.5, 36);
+      } else {
+        camera.position.set(0, 13.1, 24.7);
+      }
       camera.zoom = 1.1;
       camera.updateProjectionMatrix();
 
@@ -71,6 +80,14 @@ const Scene = () => {
         safeLoadProgress();
       }, 5000);
 
+      let activeChar: THREE.Object3D | null = null;
+      const onWindowResize = () => {
+        if (activeChar) {
+          handleResize(renderer, camera, canvasDiv, activeChar);
+        }
+      };
+      window.addEventListener("resize", onWindowResize);
+
       loadCharacter()
         .then((gltf) => {
           clearTimeout(fallbackTimer);
@@ -78,23 +95,21 @@ const Scene = () => {
             const animations = setAnimations(gltf);
             hoverDivRef.current && animations.hover(gltf, hoverDivRef.current);
             mixer = animations.mixer;
-            let character = gltf.scene;
-            setChar(character);
-            scene.add(character);
+            let loadedChar = gltf.scene;
+            activeChar = loadedChar;
+            scene.add(loadedChar);
             headBone =
-              character.getObjectByName("spine.006") ||
-              character.getObjectByName("spine006") ||
+              loadedChar.getObjectByName("spine.006") ||
+              loadedChar.getObjectByName("spine006") ||
               null;
             screenLight =
-              character.getObjectByName("screenlight") ||
-              character.getObjectByName("Glass.001") ||
+              loadedChar.getObjectByName("screenlight") ||
+              loadedChar.getObjectByName("Glass.001") ||
               null;
             safeLoadProgress(() => {
               animations.startIntro();
             });
-            window.addEventListener("resize", () =>
-              handleResize(renderer, camera, canvasDiv, character)
-            );
+            handleResize(renderer, camera, canvasDiv, loadedChar);
           }
         })
         .catch((err) => {
@@ -159,9 +174,7 @@ const Scene = () => {
         clearTimeout(debounce);
         scene.clear();
         renderer.dispose();
-        window.removeEventListener("resize", () =>
-          handleResize(renderer, camera, canvasDiv, character!)
-        );
+        window.removeEventListener("resize", onWindowResize);
         if (canvasDiv.current) {
           canvasDiv.current.removeChild(renderer.domElement);
         }
