@@ -44,6 +44,8 @@ export function setCharTimeline(
   });
   let screenLight: any = null;
   let monitor: any = null;
+  const monitorMaterials: any[] = [];
+
   character?.traverse((object: any) => {
     if (
       object.name === "Plane.004" ||
@@ -52,33 +54,49 @@ export function setCharTimeline(
     ) {
       monitor = object;
       monitor.position.set(-0.0628, 9.0406, 5.1186);
-      if (Array.isArray(object.material)) {
-        object.material.forEach((mat: any) => {
-          mat.transparent = true;
-          mat.opacity = 0;
-        });
-      } else if (object.material) {
-        object.material.transparent = true;
-        object.material.opacity = 0;
-      }
     }
     if (object.name === "screenlight" || object.name === "Glass.002") {
       screenLight = object;
       screenLight.position.set(-0.0531, 9.0411, 5.1217);
-      if (object.material) {
-        object.material.transparent = true;
-        object.material.opacity = 0;
-        if (object.material.emissive) {
-          object.material.emissive.set("#5eead4");
-          gsap.timeline({ repeat: -1, repeatRefresh: true }).to(object.material, {
-            emissiveIntensity: () => intensity * 8,
-            duration: () => Math.random() * 0.6,
-            delay: () => Math.random() * 0.1,
-          });
-        }
-      }
     }
   });
+
+  if (monitor) {
+    monitor.position.set(-0.0628, 9.0406, 5.1186);
+    monitor.traverse((child: any) => {
+      if (child.isMesh && child.material) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach((mat: any) => {
+            mat.transparent = true;
+            mat.depthWrite = true;
+            mat.opacity = 0;
+            if (!monitorMaterials.includes(mat)) monitorMaterials.push(mat);
+          });
+        } else {
+          child.material.transparent = true;
+          child.material.depthWrite = true;
+          child.material.opacity = 0;
+          if (!monitorMaterials.includes(child.material)) {
+            monitorMaterials.push(child.material);
+          }
+        }
+      }
+    });
+  }
+
+  if (screenLight && screenLight.material) {
+    screenLight.material.transparent = true;
+    screenLight.material.opacity = 0;
+    if (screenLight.material.emissive) {
+      screenLight.material.emissive.set("#5eead4");
+      gsap.timeline({ repeat: -1, repeatRefresh: true }).to(screenLight.material, {
+        emissiveIntensity: () => intensity * 8,
+        duration: () => Math.random() * 0.6,
+        delay: () => Math.random() * 0.1,
+      });
+    }
+  }
+
   let neckBone =
     character?.getObjectByName("spine.005") ||
     character?.getObjectByName("spine005");
@@ -112,19 +130,13 @@ export function setCharTimeline(
 
       if (monitor) {
         monitor.position.set(-0.0628, 9.0406, 5.1186);
-        if (Array.isArray(monitor.material)) {
-          monitor.material.forEach((mat: any) => {
-            tl2.to(mat, { opacity: 1, duration: 1.2, delay: 3.0 }, 0);
-          });
-        } else if (monitor.material) {
-          tl2.to(monitor.material, { opacity: 1, duration: 1.2, delay: 3.0 }, 0);
-        }
+        monitorMaterials.forEach((mat) => {
+          tl2.to(mat, { opacity: 1, duration: 1.5, delay: 2.0 }, 0);
+        });
       }
-      if (screenLight) {
+      if (screenLight && screenLight.material) {
         screenLight.position.set(-0.0531, 9.0411, 5.1217);
-        if (screenLight.material) {
-          tl2.to(screenLight.material, { opacity: 1, duration: 1.2, delay: 3.2 }, 0);
-        }
+        tl2.to(screenLight.material, { opacity: 1, duration: 1.5, delay: 2.2 }, 0);
       }
 
       tl2.fromTo(
@@ -143,20 +155,23 @@ export function setCharTimeline(
         )
         .fromTo(".whatIDO", { y: 0 }, { y: "15%", duration: 2 }, 0)
         .to(character.rotation, { x: -0.04, duration: 2, delay: 1 }, 0);
+
+      // Ensure computer monitor and screen are explicitly visible in What I Do
+      if (monitorMaterials.length > 0) {
+        tl3.set(monitorMaterials, { opacity: 1 }, 0);
+      }
+      if (screenLight && screenLight.material) {
+        tl3.set(screenLight.material, { opacity: 1 }, 0);
+      }
     }
   } else {
     if (character) {
       if (monitor) {
         monitor.position.set(-0.0628, 9.0406, 5.1186);
-        if (Array.isArray(monitor.material)) {
-          monitor.material.forEach((mat: any) => {
-            mat.transparent = true;
-            mat.opacity = 0;
-          });
-        } else if (monitor.material) {
-          monitor.material.transparent = true;
-          monitor.material.opacity = 0;
-        }
+        monitorMaterials.forEach((mat) => {
+          mat.transparent = true;
+          mat.opacity = 0;
+        });
       }
       if (screenLight && screenLight.material) {
         screenLight.position.set(-0.0531, 9.0411, 5.1217);
