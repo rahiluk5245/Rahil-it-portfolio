@@ -45,23 +45,29 @@ export function setCharTimeline(
   let screenLight: any = null;
   let monitor: any = null;
   character?.traverse((object: any) => {
-    if (object.name === "Plane.004" || object.name === "Plane004") {
+    if (
+      object.name === "Plane.004" ||
+      object.name === "Plane004" ||
+      object.name === "monitor"
+    ) {
       monitor = object;
+      monitor.position.set(-0.0628, 9.0406, 5.1186);
       if (Array.isArray(object.material)) {
         object.material.forEach((mat: any) => {
-          mat.transparent = true;
-          mat.opacity = 0;
+          mat.transparent = false;
+          mat.opacity = 1;
         });
       } else if (object.material) {
-        object.material.transparent = true;
-        object.material.opacity = 0;
+        object.material.transparent = false;
+        object.material.opacity = 1;
       }
     }
-    if (object.name === "screenlight") {
+    if (object.name === "screenlight" || object.name === "Glass.002") {
       screenLight = object;
+      screenLight.position.set(-0.0531, 9.0411, 5.1217);
       if (object.material) {
         object.material.transparent = true;
-        object.material.opacity = 0;
+        object.material.opacity = 1;
         if (object.material.emissive) {
           object.material.emissive.set("#5eead4");
           gsap.timeline({ repeat: -1, repeatRefresh: true }).to(object.material, {
@@ -103,36 +109,22 @@ export function setCharTimeline(
       if (neckBone) {
         tl2.to(neckBone.rotation, { x: 0.6, delay: 2, duration: 3 }, 0);
       }
-      const initialMonitorY = monitor ? monitor.position.y : 9.04;
-      const initialMonitorZ = monitor ? monitor.position.z : 5.12;
-      const initialScreenY = screenLight ? screenLight.position.y : 9.04;
-      const initialScreenZ = screenLight ? screenLight.position.z : 5.12;
 
       if (monitor) {
+        monitor.position.set(-0.0628, 9.0406, 5.1186);
         if (Array.isArray(monitor.material)) {
           monitor.material.forEach((mat: any) => {
-            tl2.to(mat, { opacity: 1, duration: 0.8, delay: 3.2 }, 0);
+            mat.opacity = 1;
           });
         } else if (monitor.material) {
-          tl2.to(monitor.material, { opacity: 1, duration: 0.8, delay: 3.2 }, 0);
+          monitor.material.opacity = 1;
         }
-        tl2.fromTo(
-          monitor.position,
-          { y: initialMonitorY - 8, z: initialMonitorZ + 1 },
-          { y: initialMonitorY, z: initialMonitorZ, delay: 1.5, duration: 3 },
-          0
-        );
       }
       if (screenLight) {
+        screenLight.position.set(-0.0531, 9.0411, 5.1217);
         if (screenLight.material) {
-          tl2.to(screenLight.material, { opacity: 1, duration: 0.8, delay: 4.5 }, 0);
+          screenLight.material.opacity = 1;
         }
-        tl2.fromTo(
-          screenLight.position,
-          { y: initialScreenY - 8, z: initialScreenZ + 1 },
-          { y: initialScreenY, z: initialScreenZ, delay: 1.5, duration: 3 },
-          0
-        );
       }
 
       tl2.fromTo(
@@ -155,6 +147,7 @@ export function setCharTimeline(
   } else {
     if (character) {
       if (monitor) {
+        monitor.position.set(-0.0628, 9.0406, 5.1186);
         if (Array.isArray(monitor.material)) {
           monitor.material.forEach((mat: any) => {
             mat.opacity = 1;
@@ -164,6 +157,7 @@ export function setCharTimeline(
         }
       }
       if (screenLight && screenLight.material) {
+        screenLight.position.set(-0.0531, 9.0411, 5.1217);
         screenLight.material.opacity = 1;
       }
     }

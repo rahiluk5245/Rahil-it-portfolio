@@ -158,6 +158,22 @@ const setCharacter = (
               character.getObjectByName("foot.L");
             if (footL) footL.position.y = 3.36;
 
+            // 6. Ensure computer monitor and screen rest securely on top of the desk (not under table)
+            const monitorObj =
+              character.getObjectByName("monitor") ||
+              character.getObjectByName("Plane.004") ||
+              character.getObjectByName("Plane004");
+            if (monitorObj) {
+              monitorObj.position.set(-0.0628, 9.0406, 5.1186);
+            }
+
+            const screenLightObj =
+              character.getObjectByName("screenlight") ||
+              character.getObjectByName("Glass.002");
+            if (screenLightObj) {
+              screenLightObj.position.set(-0.0531, 9.0411, 5.1217);
+            }
+
             resolve(gltf);
           } catch (initErr) {
             console.error("Error initializing character model:", initErr);
