@@ -54,12 +54,12 @@ export function setCharTimeline(
       monitor.position.set(-0.0628, 9.0406, 5.1186);
       if (Array.isArray(object.material)) {
         object.material.forEach((mat: any) => {
-          mat.transparent = false;
-          mat.opacity = 1;
+          mat.transparent = true;
+          mat.opacity = 0;
         });
       } else if (object.material) {
-        object.material.transparent = false;
-        object.material.opacity = 1;
+        object.material.transparent = true;
+        object.material.opacity = 0;
       }
     }
     if (object.name === "screenlight" || object.name === "Glass.002") {
@@ -67,7 +67,7 @@ export function setCharTimeline(
       screenLight.position.set(-0.0531, 9.0411, 5.1217);
       if (object.material) {
         object.material.transparent = true;
-        object.material.opacity = 1;
+        object.material.opacity = 0;
         if (object.material.emissive) {
           object.material.emissive.set("#5eead4");
           gsap.timeline({ repeat: -1, repeatRefresh: true }).to(object.material, {
@@ -114,16 +114,16 @@ export function setCharTimeline(
         monitor.position.set(-0.0628, 9.0406, 5.1186);
         if (Array.isArray(monitor.material)) {
           monitor.material.forEach((mat: any) => {
-            mat.opacity = 1;
+            tl2.to(mat, { opacity: 1, duration: 1.2, delay: 3.0 }, 0);
           });
         } else if (monitor.material) {
-          monitor.material.opacity = 1;
+          tl2.to(monitor.material, { opacity: 1, duration: 1.2, delay: 3.0 }, 0);
         }
       }
       if (screenLight) {
         screenLight.position.set(-0.0531, 9.0411, 5.1217);
         if (screenLight.material) {
-          screenLight.material.opacity = 1;
+          tl2.to(screenLight.material, { opacity: 1, duration: 1.2, delay: 3.2 }, 0);
         }
       }
 
@@ -150,15 +150,18 @@ export function setCharTimeline(
         monitor.position.set(-0.0628, 9.0406, 5.1186);
         if (Array.isArray(monitor.material)) {
           monitor.material.forEach((mat: any) => {
-            mat.opacity = 1;
+            mat.transparent = true;
+            mat.opacity = 0;
           });
         } else if (monitor.material) {
-          monitor.material.opacity = 1;
+          monitor.material.transparent = true;
+          monitor.material.opacity = 0;
         }
       }
       if (screenLight && screenLight.material) {
         screenLight.position.set(-0.0531, 9.0411, 5.1217);
-        screenLight.material.opacity = 1;
+        screenLight.material.transparent = true;
+        screenLight.material.opacity = 0;
       }
     }
   }

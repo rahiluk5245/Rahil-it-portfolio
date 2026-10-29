@@ -159,12 +159,26 @@ const setCharacter = (
             if (footL) footL.position.y = 3.36;
 
             // 6. Ensure computer monitor and screen rest securely on top of the desk (not under table)
+            // and initialize opacity to 0 so they don't block the character on the front landing page
             const monitorObj =
               character.getObjectByName("monitor") ||
               character.getObjectByName("Plane.004") ||
               character.getObjectByName("Plane004");
             if (monitorObj) {
               monitorObj.position.set(-0.0628, 9.0406, 5.1186);
+              monitorObj.traverse((child: any) => {
+                if (child.isMesh && child.material) {
+                  if (Array.isArray(child.material)) {
+                    child.material.forEach((m: any) => {
+                      m.transparent = true;
+                      m.opacity = 0;
+                    });
+                  } else {
+                    child.material.transparent = true;
+                    child.material.opacity = 0;
+                  }
+                }
+              });
             }
 
             const screenLightObj =
@@ -172,6 +186,12 @@ const setCharacter = (
               character.getObjectByName("Glass.002");
             if (screenLightObj) {
               screenLightObj.position.set(-0.0531, 9.0411, 5.1217);
+              screenLightObj.traverse((child: any) => {
+                if (child.isMesh && child.material) {
+                  child.material.transparent = true;
+                  child.material.opacity = 0;
+                }
+              });
             }
 
             resolve(gltf);
